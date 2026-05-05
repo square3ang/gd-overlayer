@@ -1,12 +1,5 @@
 #include "TextObject.hpp"
 
-TextObject::~TextObject()
-{
-    if (actualText)
-    {
-        actualText->removeFromParentAndCleanup(true);
-    }
-}
 
 void TextObject::init()
 {
@@ -58,4 +51,13 @@ void TextObject::drawSettings()
     byteColorEdit4("Color", color);
 
     update();
+}
+
+void TextObject::destroy()
+{
+    if (actualText)
+    {
+        actualText->removeFromParentAndCleanup(true);
+        actualText = nullptr;
+    }
 }
