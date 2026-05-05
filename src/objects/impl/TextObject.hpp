@@ -24,5 +24,5 @@ public:
 
     void drawSettings() override;
 
-    ~TextObject();
+    void destroy() override;
 };

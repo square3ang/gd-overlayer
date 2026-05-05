@@ -52,6 +52,7 @@ $on_mod(Loaded) {
                 // Remove the object from the list and delete it
                 auto it = std::find(objects.begin(), objects.end(), obj);
                 if (it != objects.end()) {
+                    (*it)->destroy();
                     delete *it;
                     objects.erase(it);
                 }

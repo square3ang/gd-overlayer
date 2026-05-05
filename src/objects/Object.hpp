@@ -29,4 +29,8 @@ public:
 
     }
 
+    virtual void destroy() {
+
+    }
+
 };
