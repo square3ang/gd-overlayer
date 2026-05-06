@@ -47,7 +47,7 @@ void TextObject::drawSettings()
         }
         ImGui::EndCombo();
     }
-    ImGui::DragFloat("Font Size", &fontSize, 10.0f, 100.0f);
+    ImGui::DragFloat("Font Size", &fontSize, 1.0f, 10.0f, 100.0f);
     byteColorEdit4("Color", color);
 
     update();
