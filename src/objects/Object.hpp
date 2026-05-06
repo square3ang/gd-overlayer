@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <Geode/utils/Random.hpp>
+#include <Geode/Utils.hpp>
 
 class Object {
 public:
