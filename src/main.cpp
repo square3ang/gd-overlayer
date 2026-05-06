@@ -34,7 +34,7 @@ $on_mod(Loaded) {
         if (!settingsOpen) return;
 		static auto io = ImGui::GetIO();
 		ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x / 5, io.DisplaySize.y / 2));
-        ImGui::Begin("Overlayer");
+        ImGui::Begin("Overlayer", &settingsOpen, ImGuiWindowFlags_NoResize);
 
         if (ImGui::Button("Add Text")) {
             auto textObject = new TextObject();
