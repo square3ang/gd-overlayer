@@ -28,6 +28,7 @@ $on_mod(Loaded) {
         
 
     }).draw([] {
+        if (!settingsOpen) return;
 		static auto io = ImGui::GetIO();
 		ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x / 5, io.DisplaySize.y / 2));
         ImGui::Begin("Overlayer");
