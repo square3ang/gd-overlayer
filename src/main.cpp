@@ -25,7 +25,23 @@ $on_mod(Loaded) {
         auto* font = ImGui::GetIO().Fonts->AddFontFromFileTTF((Mod::get()->getResourcesDir() / "PretendardVariable.ttf").string().c_str(), 18.0f);
         io.FontDefault = font;
         io.Fonts->Build();
-        
+
+        auto style = &ImGui::GetStyle();
+        style->WindowRounding = 10.0f;
+        style->WindowPadding = ImVec2(10.0f, 10.0f);
+        style->FrameRounding = 5.0f;
+        style->Alpha = 1.0f;
+        style->Colors[ImGuiCol_TitleBg] = ImVec4(0, 0.4f, 0.9f, 1.0f);
+        style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0, 0.5f, 1.0f, 1.0f);
+        style->Colors[ImGuiCol_WindowBg] = ImVec4(0, 0, 0, 1.0f);
+        style->Colors[ImGuiCol_Button] = ImVec4(0, 0.4f, 0.9f, 1.0f);
+        style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0, 0.5f, 1.0f, 1.0f);
+        style->Colors[ImGuiCol_ButtonActive] = ImVec4(0, 0.6f, 1.0f, 1.0f);
+        style->Colors[ImGuiCol_FrameBg] = ImVec4(0, 0.4f, 0.9f, 1.0f);
+        style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0, 0.5f, 1.0f, 1.0f);
+        style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0, 0.6f, 1.0f, 1.0f);
+
+        style->WindowBorderSize = 0.0f;
 
     }).draw([] {
         if (!settingsOpen) return;
