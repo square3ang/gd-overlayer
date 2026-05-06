@@ -44,11 +44,11 @@ $on_mod(Loaded) {
             ImGui::BeginGroup();
             ImGui::InputText("##Name", &obj->name);
             ImGui::SameLine();
-            if (ImGui::Button(std::format("Edit##{}_EDIT", obj->uuid).c_str())) {
+            if (ImGui::Button(fmt::format("Edit##{}_EDIT", obj->uuid).c_str())) {
                 obj->settingsOpen = !obj->settingsOpen;
             }
             ImGui::SameLine();
-            if (ImGui::Button(std::format("Delete##{}_DELETE", obj->uuid).c_str())) {
+            if (ImGui::Button(fmt::format("Delete##{}_DELETE", obj->uuid).c_str())) {
                 // Remove the object from the list and delete it
                 auto it = std::find(objects.begin(), objects.end(), obj);
                 if (it != objects.end()) {
@@ -67,7 +67,7 @@ $on_mod(Loaded) {
             if (obj->settingsOpen) {
                 ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x / 5, io.DisplaySize.y / 2), ImGuiCond_Once);
                 ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 2, io.DisplaySize.y / 2), ImGuiCond_Once, ImVec2(0.5f, 0.5f));
-                ImGui::Begin(std::format("{} Settings##{}_SETTINGS", obj->name, obj->uuid).c_str(), &obj->settingsOpen);
+                ImGui::Begin(fmt::format("{} Settings##{}_SETTINGS", obj->name, obj->uuid).c_str(), &obj->settingsOpen);
                 
                 obj->drawSettings();
 
