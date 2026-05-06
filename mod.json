@@ -18,5 +18,13 @@
 		"files":[
 			"PretendardVariable.ttf"
 		]
+	},
+	"settings": {
+		"toggle-menu": {
+			"type": "keybind",
+			"name": "Toggle Menu",
+			"description": "The keybind to open the menu.",
+			"default": "F1"
+		}
 	}
 }

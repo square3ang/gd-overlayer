@@ -11,8 +11,13 @@ using namespace geode::prelude;
 
 
 static std::vector<Object*> objects;
+static bool settingsOpen = false;
 
 $on_mod(Loaded) {
+
+    listenForKeybindSettingPresses("toggle-menu", [](Keybind const& keybind, bool down, bool repeat, double timestamp) {
+        if (down) settingsOpen = !settingsOpen;
+    });
 	
 	ImGuiCocos::get().setup([] {
         auto io = ImGui::GetIO();
