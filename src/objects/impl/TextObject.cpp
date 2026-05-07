@@ -36,8 +36,6 @@ void TextObject::drawSettings()
     valueChanged |= ImGui::DragFloat2("Position", &x);
     valueChanged |= ImGui::DragFloat2("Pivot", &pivotX, 0.01f, 0.0f, 1.0f);
     valueChanged |= ImGui::DragFloat("Rotation", &rotation);
-
-    valueChanged |= ImGui::InputText("Text", &text);
     if (ImGui::BeginCombo("Font", fontName.c_str()))
     {
         for (const auto &fontname : fonts)
@@ -55,6 +53,7 @@ void TextObject::drawSettings()
     }
     valueChanged |= ImGui::DragFloat("Font Size", &fontSize, 0.25f, 1.0f, 100.0f);
     valueChanged |= byteColorEdit4("Color", color);
+    valueChanged |= ImGui::InputTextMultiline("Text", &text);
 
     if (valueChanged) update();
 }
