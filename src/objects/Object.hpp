@@ -9,6 +9,8 @@ public:
     std::string uuid;
     float x;
     float y;
+    float pivotX;
+    float pivotY;
     float rotation;
 
     bool settingsOpen = false;

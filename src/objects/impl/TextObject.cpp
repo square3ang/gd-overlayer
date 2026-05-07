@@ -5,6 +5,7 @@ void TextObject::init()
 {
     actualText = CCLabelBMFont::create(text.c_str(), fontName.c_str());
     actualText->setPosition(x, y);
+    actualText->setAnchorPoint(ccp(pivotX, pivotY));
     actualText->setRotation(rotation);
     actualText->setScale(fontSize / 24.0f);
     actualText->setColor(ccc3(color.r, color.g, color.b));
@@ -17,6 +18,7 @@ void TextObject::update()
     if (actualText)
     {
         actualText->setPosition(x, y);
+        actualText->setAnchorPoint(ccp(pivotX, pivotY));
         actualText->setRotation(rotation);
         actualText->setScale(fontSize / 24.0f);
         actualText->setString(text.c_str());
@@ -32,6 +34,7 @@ void TextObject::drawSettings()
 
     auto valueChanged = false;
     valueChanged |= ImGui::DragFloat2("Position", &x);
+    valueChanged |= ImGui::DragFloat2("Pivot", &pivotX, 0.01f, 0.0f, 1.0f);
     valueChanged |= ImGui::DragFloat("Rotation", &rotation);
 
     valueChanged |= ImGui::InputText("Text", &text);
