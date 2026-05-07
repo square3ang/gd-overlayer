@@ -29,10 +29,12 @@ void TextObject::update()
 void TextObject::drawSettings()
 {
     static auto fonts = getEveryGDFont();
-    ImGui::DragFloat2("Position", &x);
-    ImGui::DragFloat("Rotation", &rotation);
 
-    ImGui::InputText("Text", &text);
+    auto valueChanged = false;
+    valueChanged |= ImGui::DragFloat2("Position", &x);
+    valueChanged |= ImGui::DragFloat("Rotation", &rotation);
+
+    valueChanged |= ImGui::InputText("Text", &text);
     if (ImGui::BeginCombo("Font", fontName.c_str()))
     {
         for (const auto &fontname : fonts)
@@ -41,16 +43,17 @@ void TextObject::drawSettings()
             if (ImGui::Selectable(fontname.c_str(), isSelected))
             {
                 fontName = fontname;
+                valueChanged = true;
             }
             if (isSelected)
                 ImGui::SetItemDefaultFocus();
         }
         ImGui::EndCombo();
     }
-    ImGui::DragFloat("Font Size", &fontSize, 0.25f, 1.0f, 100.0f);
-    byteColorEdit4("Color", color);
+    valueChanged |= ImGui::DragFloat("Font Size", &fontSize, 0.25f, 1.0f, 100.0f);
+    valueChanged |= byteColorEdit4("Color", color);
 
-    update();
+    if (valueChanged) update();
 }
 
 void TextObject::destroy()
