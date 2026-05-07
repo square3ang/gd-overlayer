@@ -5,13 +5,13 @@
 
 class Object {
 public:
-    std::string name;
+    std::string name = "Object";
     std::string uuid;
-    float x;
-    float y;
-    float pivotX;
-    float pivotY;
-    float rotation;
+    float x = 0.0f;
+    float y = 0.0f;
+    float pivotX = 0.5f;
+    float pivotY = 0.5f;
+    float rotation = 0.0f;
 
     bool settingsOpen = false;
 

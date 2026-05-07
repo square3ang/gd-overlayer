@@ -38,15 +38,6 @@ $on_mod(Loaded) {
 
         if (ImGui::Button("Add Text")) {
             auto textObject = new TextObject();
-            textObject->x = 200.0f;
-            textObject->y = 200.0f;
-            textObject->pivotX = 0.5f;
-            textObject->pivotY = 0.5f;
-            textObject->name = "Text Object";
-            textObject->text = "Hello, World!";
-            textObject->fontSize = 12.0f;
-            textObject->fontName = "bigFont.fnt";
-            textObject->color = ccColor4B(255, 255, 255, 255);
             textObject->init();
             objects.push_back(textObject);
         }
