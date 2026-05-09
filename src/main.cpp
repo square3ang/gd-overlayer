@@ -71,7 +71,7 @@ $on_mod(Loaded)
     ImGuiCocos::get().setup([]
                             {
                                 auto io = ImGui::GetIO();
-                                io.IniFilename = nullptr;
+                                //io.IniFilename = nullptr; not works
                                 auto *font = ImGui::GetIO().Fonts->AddFontFromFileTTF((Mod::get()->getResourcesDir() / "PretendardVariable.ttf").string().c_str(), 18.0f);
                                 io.FontDefault = font;
                                 io.Fonts->Build();
@@ -84,7 +84,7 @@ $on_mod(Loaded)
         if (!settingsOpen) return;
 		static auto io = ImGui::GetIO();
 		ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x / 5, io.DisplaySize.y / 2));
-        ImGui::Begin("Overlayer", &settingsOpen, ImGuiWindowFlags_NoResize);
+        ImGui::Begin("Overlayer", &settingsOpen, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
 
         if (ImGui::Button("Add Text")) {
             auto textObject = new TextObject();
@@ -119,7 +119,7 @@ $on_mod(Loaded)
             if (obj->settingsOpen) {
                 ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x / 5, io.DisplaySize.y / 2), ImGuiCond_Once);
                 ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x / 2, io.DisplaySize.y / 2), ImGuiCond_Once, ImVec2(0.5f, 0.5f));
-                ImGui::Begin(fmt::format("{} Settings##{}_SETTINGS", obj->name, obj->uuid).c_str(), &obj->settingsOpen);
+                ImGui::Begin(fmt::format("{} Settings##{}_SETTINGS", obj->name, obj->uuid).c_str(), &obj->settingsOpen, ImGuiWindowFlags_NoSavedSettings);
                 
                 obj->drawSettings();
 
