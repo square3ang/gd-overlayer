@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../../imgui/imgui_stdlib.h"
-#include "../../utils.hpp"
 #include "../Object.hpp"
 #include <Geode/Geode.hpp>
 #include <imgui-cocos.hpp>

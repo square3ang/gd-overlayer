@@ -1,4 +1,6 @@
 #include "TextObject.hpp"
+#include "../../imgui/imgui_stdlib.h"
+#include "../../utils.hpp"
 
 void TextObject::init() {
   actualText = CCLabelBMFont::create(text.c_str(), fontName.c_str());
