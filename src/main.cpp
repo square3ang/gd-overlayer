@@ -80,8 +80,8 @@ $on_mod(Loaded) {
         auto style = &ImGui::GetStyle();
         style->Alpha = 1.0f;
         style->WindowBorderSize = 0.0f;
-        style->Colors[ImGuiCol_TitleBg] = ImVec4{0.5, 1.0, 0.5, 1.0};
-        style->Colors[ImGuiCol_TitleBgActive] = ImVec4{0.5, 1.0, 0.5, 1.0};
+        style->Colors[ImGuiCol_TitleBg] = ImVec4{0.25, 0.25, 1.0, 1.0};
+        style->Colors[ImGuiCol_TitleBgActive] = ImVec4{0.25, 0.25, 1.0, 1.0};
       })
       .draw([] {
         if (!settingsOpen)

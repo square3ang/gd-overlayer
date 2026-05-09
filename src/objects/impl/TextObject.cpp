@@ -49,7 +49,8 @@ void TextObject::drawSettings() {
   }
   valueChanged |=
       ImGui::Combo("Alignment", (int *)&alignment, "Left\0Center\0Right\0");
-  valueChanged |= ImGui::DragFloat("Font Size", &fontSize, 0.25f, 1.0f, 100.0f);
+  valueChanged |=
+      ImGui::DragFloat("Font Size", &fontSize, 0.25f, 1.0f, 1000.0f);
   valueChanged |= byteColorEdit4("Color", color);
   valueChanged |= ImGui::InputTextMultiline("Text", &text);
 
