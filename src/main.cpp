@@ -8,29 +8,79 @@
 
 using namespace geode::prelude;
 
-
-
-static std::vector<Object*> objects;
+static std::vector<Object *> objects;
 static bool settingsOpen = false;
 
-$on_mod(Loaded) {
+void saveToCustomFile()
+{
+    auto path = Mod::get()->getSaveDir() / "objects_data.json";
 
-    listenForKeybindSettingPresses("toggle-menu", [](Keybind const& keybind, bool down, bool repeat, double timestamp) {
-        if (down) settingsOpen = !settingsOpen;
-    });
-	
-	ImGuiCocos::get().setup([] {
-        auto io = ImGui::GetIO();
-        io.IniFilename = nullptr;
-        auto* font = ImGui::GetIO().Fonts->AddFontFromFileTTF((Mod::get()->getResourcesDir() / "PretendardVariable.ttf").string().c_str(), 18.0f);
-        io.FontDefault = font;
-        io.Fonts->Build();
+    matjson::Value data = matjson::Value::array();
 
-        auto style = &ImGui::GetStyle();
-        style->Alpha = 1.0f;
-        style->WindowBorderSize = 0.0f;
+    for (auto &obj : objects)
+    {
+        data.push(obj->serialize());
+    }
 
-    }).draw([] {
+    utils::file::writeToJson(path, data);
+}
+
+void loadFromCustomFile()
+{
+    auto path = Mod::get()->getSaveDir() / "objects_data.json";
+    auto __data = utils::file::readFromJson<matjson::Value>(path);
+    if (!__data.isOk())
+        return;
+    auto _data = __data.unwrap().asArray();
+    if (!_data.isOk())
+        return;
+    auto data = _data.unwrap();
+
+    for (auto obj : data)
+    {
+        auto type = obj["type"].asString().unwrapOr("unknown");
+        if (type == "text")
+        {
+            auto textObject = new TextObject();
+            textObject->deserialize(obj);
+            textObject->init();
+            objects.push_back(textObject);
+        }
+    }
+}
+
+#include <Geode/modify/AppDelegate.hpp>
+class $modify(MyAppDelegate, AppDelegate)
+{
+    void trySaveGame(bool force)
+    {
+        AppDelegate::trySaveGame(force);
+        saveToCustomFile();
+    }
+};
+
+$on_mod(Loaded)
+{
+
+    listenForKeybindSettingPresses("toggle-menu", [](Keybind const &keybind, bool down, bool repeat, double timestamp)
+                                   {
+        if (down) settingsOpen = !settingsOpen; });
+
+    loadFromCustomFile();
+
+    ImGuiCocos::get().setup([]
+                            {
+                                auto io = ImGui::GetIO();
+                                io.IniFilename = nullptr;
+                                auto *font = ImGui::GetIO().Fonts->AddFontFromFileTTF((Mod::get()->getResourcesDir() / "PretendardVariable.ttf").string().c_str(), 18.0f);
+                                io.FontDefault = font;
+                                io.Fonts->Build();
+
+                                auto style = &ImGui::GetStyle();
+                                style->Alpha = 1.0f;
+                                style->WindowBorderSize = 0.0f; })
+        .draw([]
+              {
         if (!settingsOpen) return;
 		static auto io = ImGui::GetIO();
 		ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x / 5, io.DisplaySize.y / 2));
@@ -75,6 +125,5 @@ $on_mod(Loaded) {
 
                 ImGui::End();
             }
-        }
-    });
+        } });
 }

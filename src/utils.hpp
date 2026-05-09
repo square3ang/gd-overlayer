@@ -11,7 +11,6 @@
 using namespace geode::prelude;
 namespace fs = std::filesystem;
 
-
 inline bool byteColorEdit4(const char *label, ccColor4B &color)
 {
     float proxy[4] = {

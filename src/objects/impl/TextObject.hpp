@@ -12,13 +12,15 @@ using namespace geode::prelude;
 class TextObject : public Object
 {
 public:
+    CCTextAlignment alignment;
     std::string text = "Hello, World!";
     std::string fontName = "bigFont.fnt";
     float fontSize = 12.0f;
-    ccColor4B color = { 255, 255, 255, 255 };
+    ccColor4B color = {255, 255, 255, 255};
     CCLabelBMFont *actualText = nullptr;
 
-    TextObject() {
+    TextObject()
+    {
         name = "Text Object";
         x = 200.0f;
         y = 200.0f;
@@ -31,4 +33,7 @@ public:
     void drawSettings() override;
 
     void destroy() override;
+
+    matjson::Value serialize() override;
+    void deserialize(matjson::Value const &data) override;
 };

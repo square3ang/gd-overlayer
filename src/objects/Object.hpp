@@ -34,5 +34,11 @@ public:
     virtual void destroy() {
 
     }
+    virtual matjson::Value serialize() {
+        return matjson::Value::object();
+    }
+    virtual void deserialize(matjson::Value const& data) {
+
+    }
 
 };
