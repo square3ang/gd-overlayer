@@ -8,6 +8,10 @@ This is where she makes a mod.
 ## Getting started
 We recommend heading over to [the getting started section on our docs](https://docs.geode-sdk.org/getting-started/) for useful info on what to do next.
 
+## Licenses
+- [zep](https://github.com/Rezonality/zep): MIT
+- [gd-imgui-cocos](https://github.com/matcool/gd-imgui-cocos): MIT
+
 ## Build instructions
 For more info, see [our docs](https://docs.geode-sdk.org/getting-started/create-mod#build)
 ```sh
