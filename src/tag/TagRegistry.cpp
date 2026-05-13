@@ -24,8 +24,7 @@ std::vector<FormatSegment> TagRegistry::parse(std::string_view input) {
   std::vector<FormatSegment> segments;
   size_t last_pos = 0;
 
-  for (auto match :
-       ctre::search_all<"\\{([^{}:]+)(?::([^{}]+))?\\}">(input)) {
+  for (auto match : ctre::search_all<"\\{([^{}:]+)(?::([^{}]+))?\\}">(input)) {
     auto full_match = match.template get<0>();
     size_t match_start = full_match.data() - input.data();
 
@@ -53,7 +52,6 @@ std::string
 TagRegistry::renderSegments(const std::vector<FormatSegment> &segments,
                             bool isPlaying) {
   std::string result;
-  // result.reserve(input.size()); // We don't have input size easily here, could pass it if needed
 
   for (const auto &seg : segments) {
     if (seg.isTag) {
