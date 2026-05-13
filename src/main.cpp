@@ -63,6 +63,11 @@ class $modify(MyCCDirector, CCDirector) {
       obj->everyFrame();
     }
   }
+
+  void willSwitchToScene(CCScene *scene) {
+    CCDirector::willSwitchToScene(scene);
+    TagRegistry::get().clearCache();
+  }
 };
 
 void registerTags() {
