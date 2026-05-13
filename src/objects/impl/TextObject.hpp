@@ -9,8 +9,9 @@ using namespace geode::prelude;
 
 class TextObject : public Object {
 public:
-  CCTextAlignment alignment;
-  std::string text = "Hello, World!";
+  CCTextAlignment alignment = kCCTextAlignmentLeft;
+  std::string playingText = "Attempts: {Attempts}";
+  std::string idleText = "";
   std::string fontName = "bigFont.fnt";
   float fontSize = 12.0f;
   ccColor4B color = {255, 255, 255, 255};
@@ -20,11 +21,14 @@ public:
     name = "Text Object";
     x = 200.0f;
     y = 200.0f;
+    pivotX = 0.0f;
+    pivotY = 0.0f;
   }
 
   void init() override;
 
   void update() override;
+  void everyFrame() override;
 
   void drawSettings() override;
 

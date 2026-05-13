@@ -1,9 +1,10 @@
 #include "TextObject.hpp"
 #include "../../imgui/imgui_stdlib.h"
+#include "../../tag/TagRegistry.hpp"
 #include "../../utils.hpp"
 
 void TextObject::init() {
-  actualText = CCLabelBMFont::create(text.c_str(), fontName.c_str());
+  actualText = CCLabelBMFont::create("", fontName.c_str());
   actualText->setPosition(x, y);
   actualText->setAnchorPoint(ccp(pivotX, pivotY));
   actualText->setAlignment(alignment);
@@ -21,10 +22,20 @@ void TextObject::update() {
     actualText->setAlignment(alignment);
     actualText->setRotation(rotation);
     actualText->setScale(fontSize / 24.0f);
-    actualText->setString(text.c_str());
     actualText->setFntFile(fontName.c_str());
     actualText->setColor(ccc3(color.r, color.g, color.b));
     actualText->setOpacity(color.a);
+  }
+}
+
+void TextObject::everyFrame() {
+  if (actualText) {
+    auto playLayer = PlayLayer::get();
+    bool isPlaying = playLayer != nullptr;
+    std::string_view rawText = isPlaying ? playingText : idleText;
+
+    std::string processed = TagRegistry::get().process(rawText, isPlaying);
+    actualText->setString(processed.c_str());
   }
 }
 
@@ -52,7 +63,10 @@ void TextObject::drawSettings() {
   valueChanged |=
       ImGui::DragFloat("Font Size", &fontSize, 0.25f, 1.0f, 1000.0f);
   valueChanged |= byteColorEdit4("Color", color);
-  valueChanged |= ImGui::InputTextMultiline("Text", &text);
+
+  ImGui::Text("Text Templates:");
+  ImGui::InputTextMultiline("Playing Text", &playingText);
+  ImGui::InputTextMultiline("Idle Text", &idleText);
 
   if (valueChanged)
     update();
@@ -75,7 +89,8 @@ matjson::Value TextObject::serialize() {
       {"pivotY", pivotY},
       {"alignment", static_cast<int>(alignment)},
       {"rotation", rotation},
-      {"text", text},
+      {"playingText", playingText},
+      {"idleText", idleText},
       {"fontName", fontName},
       {"fontSize", fontSize},
       {"color", color},
@@ -91,7 +106,15 @@ void TextObject::deserialize(matjson::Value const &data) {
   alignment = static_cast<CCTextAlignment>(
       data["alignment"].asInt().unwrapOr(alignment));
   rotation = data["rotation"].asDouble().unwrapOr(rotation);
-  text = data["text"].asString().unwrapOr(text);
+
+  // very old ver compat
+  if (data.contains("text")) {
+    playingText = data["text"].asString().unwrapOr(playingText);
+    idleText = playingText;
+  }
+
+  playingText = data["playingText"].asString().unwrapOr(playingText);
+  idleText = data["idleText"].asString().unwrapOr(idleText);
   fontName = data["fontName"].asString().unwrapOr(fontName);
   fontSize = data["fontSize"].asDouble().unwrapOr(fontSize);
   color = data["color"].as<ccColor4B>().unwrapOr(color);

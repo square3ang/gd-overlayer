@@ -20,6 +20,7 @@ public:
   virtual void draw() {}
   virtual void drawSettings() {}
   virtual void update() {}
+  virtual void everyFrame() {}
 
   virtual void destroy() {}
   virtual matjson::Value serialize() { return matjson::Value::object(); }
