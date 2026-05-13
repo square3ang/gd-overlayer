@@ -47,19 +47,9 @@ void Overlayer::load() {
   }
 }
 
+#include "tag/impl/GamePlay.hpp"
 void Overlayer::registerTags() {
-  auto attemptsHandler = [](std::string_view arg) -> TagValue {
-    auto playLayer = PlayLayer::get();
-    if (!playLayer)
-      return 0;
-
-    if (arg == "total") {
-      return playLayer->m_level->m_attempts;
-    }
-
-    return playLayer->m_attempts;
-  };
-  TagRegistry::get().registerTag("Attempts", attemptsHandler, false);
+  TagRegistry::get().registerTag("Attempts", GamePlay::Attempts, false);
 }
 
 void Overlayer::renderGUI() {
