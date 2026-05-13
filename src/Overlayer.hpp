@@ -1,12 +1,13 @@
 #pragma once
 #include "objects/Object.hpp"
+#include <memory>
 #include <vector>
 
 class Overlayer {
 public:
   static Overlayer *get();
 
-  std::vector<Object *> m_objects;
+  std::vector<std::unique_ptr<Object>> m_objects;
   bool m_settingsOpen = false;
 
   void save();

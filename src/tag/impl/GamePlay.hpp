@@ -30,12 +30,26 @@ public:
     }
 
     if (!arg.empty()) {
-      int precision = geode::utils::numFromString<int>(arg).unwrapOr(0);
+      bool stripZeros = arg.back() == '#';
+      std::string_view precisionArg =
+          stripZeros ? arg.substr(0, arg.size() - 1) : arg;
+
+      int precision =
+          geode::utils::numFromString<int>(precisionArg).unwrapOr(0);
       if (precision > 10)
         precision = 10;
       if (precision < 0)
         precision = 0;
-      return fmt::format("{:.{}f}", currentPercent, precision);
+
+      std::string formatted = fmt::format("{:.{}f}", currentPercent, precision);
+
+      if (stripZeros && formatted.find('.') != std::string::npos) {
+        formatted.erase(formatted.find_last_not_of('0') + 1, std::string::npos);
+        if (formatted.back() == '.') {
+          formatted.pop_back();
+        }
+      }
+      return formatted;
     }
 
     return currentPercent;

@@ -39,10 +39,10 @@ void Overlayer::load() {
   for (auto obj : data) {
     auto type = obj["type"].asString().unwrapOr("unknown");
     if (type == "text") {
-      auto textObject = new TextObject();
+      auto textObject = std::make_unique<TextObject>();
       textObject->deserialize(obj);
       textObject->init();
-      m_objects.push_back(textObject);
+      m_objects.push_back(std::move(textObject));
     }
   }
 }
@@ -62,9 +62,8 @@ void Overlayer::renderGUI() {
   ImGui::Checkbox("Simulate In-game", &reg.m_simulationMode);
 
   if (ImGui::Button("Add Text")) {
-    auto textObject = new TextObject();
-    textObject->init();
-    m_objects.push_back(textObject);
+    m_objects.push_back(std::make_unique<TextObject>());
+    m_objects.back()->init();
   }
 
   for (auto &obj : m_objects) {
@@ -76,12 +75,11 @@ void Overlayer::renderGUI() {
     }
     ImGui::SameLine();
     if (ImGui::Button(fmt::format("Delete##{}_DELETE", obj->uuid).c_str())) {
-      // Remove the object from the list and delete it
       auto it = std::find(m_objects.begin(), m_objects.end(), obj);
       if (it != m_objects.end()) {
         (*it)->destroy();
-        delete *it;
         m_objects.erase(it);
+        break;
       }
     }
     ImGui::EndGroup();

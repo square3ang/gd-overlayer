@@ -5,6 +5,7 @@
 
 class Object {
 public:
+  virtual ~Object() = default;
   std::string name = "Object";
   std::string uuid;
   float x = 0.0f;
