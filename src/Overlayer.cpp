@@ -21,7 +21,7 @@ void Overlayer::save() {
     data.push(obj->serialize());
   }
 
-  if (!utils::file::writeToJson(path, data).isOk()) {
+  if (!utils::file::writeToJson(path, data)) {
     log::error("Failed to save objects: {}", path);
   }
 }
@@ -29,10 +29,10 @@ void Overlayer::save() {
 void Overlayer::load() {
   auto path = Mod::get()->getSaveDir() / "objects_data.json";
   auto __data = utils::file::readFromJson<matjson::Value>(path);
-  if (!__data.isOk())
+  if (!__data)
     return;
   auto _data = __data.unwrap().asArray();
-  if (!_data.isOk())
+  if (!_data)
     return;
   auto data = _data.unwrap();
 
@@ -50,6 +50,7 @@ void Overlayer::load() {
 #include "tag/impl/GamePlay.hpp"
 void Overlayer::registerTags() {
   TagRegistry::get().registerTag("Attempts", GamePlay::Attempts, false);
+  TagRegistry::get().registerTag("Progress", GamePlay::Progress, false);
 }
 
 void Overlayer::renderGUI() {
