@@ -32,7 +32,8 @@ void TextObject::everyFrame() {
   if (actualText) {
     auto playLayer = PlayLayer::get();
     bool isPlaying = playLayer != nullptr;
-    std::string_view rawText = isPlaying ? playingText : idleText;
+    bool isSimulating = TagRegistry::get().m_simulationMode;
+    std::string_view rawText = (isPlaying || isSimulating) ? playingText : idleText;
 
     std::string processed = TagRegistry::get().process(rawText, isPlaying);
     actualText->setString(processed.c_str());

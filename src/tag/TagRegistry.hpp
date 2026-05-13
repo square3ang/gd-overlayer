@@ -4,9 +4,10 @@
 #include <string_view>
 #include <unordered_map>
 #include <variant>
+#include <vector>
 
 using TagValue = std::variant<std::string, int, float, double>;
-using TagHandler = std::function<TagValue(std::string_view)>;
+using TagHandler = std::function<TagValue(std::string_view, bool)>;
 
 class TagRegistry {
 public:
@@ -20,6 +21,8 @@ public:
 
   std::string process(std::string_view input, bool isPlaying);
   void clearCache();
+
+  bool m_simulationMode = false;
 
 private:
   struct TagData {

@@ -48,18 +48,18 @@ void Overlayer::load() {
 }
 
 #include "tag/impl/GamePlay.hpp"
-void Overlayer::registerTags() {
-  TagRegistry::get().registerTag("Attempts", GamePlay::Attempts, false);
-  TagRegistry::get().registerTag("Progress", GamePlay::Progress, false);
-}
+void Overlayer::registerTags() { GamePlay::registerTags(); }
 
 void Overlayer::renderGUI() {
   if (!m_settingsOpen)
     return;
   static auto io = ImGui::GetIO();
-  ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x / 5, io.DisplaySize.y / 2));
-  ImGui::Begin("Overlayer", &m_settingsOpen,
-               ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings);
+  ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x / 5, io.DisplaySize.y / 2),
+                           ImGuiCond_Once);
+  ImGui::Begin("Overlayer", &m_settingsOpen, ImGuiWindowFlags_NoSavedSettings);
+
+  auto &reg = TagRegistry::get();
+  ImGui::Checkbox("Simulate In-game", &reg.m_simulationMode);
 
   if (ImGui::Button("Add Text")) {
     auto textObject = new TextObject();

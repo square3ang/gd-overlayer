@@ -11,7 +11,8 @@ TagRegistry &TagRegistry::get() {
 void TagRegistry::registerTag(const std::string &name,
                               std::function<TagValue()> func,
                               bool availableInIdle) {
-  m_tags[name] = {[func](std::string_view) { return func(); }, availableInIdle};
+  m_tags[name] = {[func](std::string_view, bool) { return func(); },
+                  availableInIdle};
 }
 
 void TagRegistry::registerTag(const std::string &name, TagHandler handler,
@@ -58,8 +59,10 @@ std::string TagRegistry::process(std::string_view input, bool isPlaying) {
     if (seg.isTag) {
       if (m_tags.contains(seg.text)) {
         const auto &tagData = m_tags[seg.text];
-        if (isPlaying || tagData.availableInIdle) {
-          auto value = tagData.handler(seg.tagArg);
+        if (isPlaying || tagData.availableInIdle || m_simulationMode) {
+          bool isSimulation = m_simulationMode && !isPlaying;
+          TagValue value = tagData.handler(seg.tagArg, isSimulation);
+
           std::visit(
               [&result](auto &&val) {
                 fmt::format_to(std::back_inserter(result), "{}", val);

@@ -22,7 +22,7 @@ public:
     x = 200.0f;
     y = 200.0f;
     pivotX = 0.0f;
-    pivotY = 0.0f;
+    pivotY = 1.0f;
   }
 
   void init() override;
