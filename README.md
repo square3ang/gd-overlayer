@@ -2,7 +2,7 @@
 
 <img src="logo.png" width="150" alt="the mod's logo" />
 
-Display everything you imagine,
+Display everything you imagine.
 
 ## Licenses
 - [zep](https://github.com/Rezonality/zep): MIT
