@@ -25,6 +25,7 @@ void TextObject::update() {
     actualText->setFntFile(fontName.c_str());
     actualText->setColor(ccc3(color.r, color.g, color.b));
     actualText->setOpacity(color.a);
+    TagRegistry::get().clearCache();
   }
 }
 
@@ -33,7 +34,8 @@ void TextObject::everyFrame() {
     auto playLayer = PlayLayer::get();
     bool isPlaying = playLayer != nullptr;
     bool isSimulating = TagRegistry::get().m_simulationMode;
-    std::string_view rawText = (isPlaying || isSimulating) ? playingText : idleText;
+    std::string_view rawText =
+        (isPlaying || isSimulating) ? playingText : idleText;
 
     std::string processed = TagRegistry::get().process(rawText, isPlaying);
     actualText->setString(processed.c_str());
