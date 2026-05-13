@@ -1,7 +1,6 @@
 #include <Geode/Geode.hpp>
 
 #include "Overlayer.hpp"
-#include "tag/TagRegistry.hpp"
 
 using namespace geode::prelude;
 
@@ -20,11 +19,6 @@ class $modify(MyCCDirector, CCDirector) {
     for (auto &obj : Overlayer::get()->m_objects) {
       obj->everyFrame();
     }
-  }
-
-  void willSwitchToScene(CCScene *scene) {
-    CCDirector::willSwitchToScene(scene);
-    TagRegistry::get().clearCache();
   }
 };
 

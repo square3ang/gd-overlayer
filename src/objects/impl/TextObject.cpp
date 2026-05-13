@@ -25,20 +25,21 @@ void TextObject::update() {
     actualText->setFntFile(fontName.c_str());
     actualText->setColor(ccc3(color.r, color.g, color.b));
     actualText->setOpacity(color.a);
-    TagRegistry::get().clearCache();
   }
 }
-
 void TextObject::everyFrame() {
   if (actualText) {
     auto playLayer = PlayLayer::get();
     bool isPlaying = playLayer != nullptr;
     bool isSimulating = TagRegistry::get().m_simulationMode;
-    std::string_view rawText =
-        (isPlaying || isSimulating) ? playingText : idleText;
 
-    std::string processed = TagRegistry::get().process(rawText, isPlaying);
-    actualText->setString(processed.c_str());
+    if (isPlaying || isSimulating) {
+      m_playingTagged.setRaw(playingText);
+      m_playingTagged.apply(actualText, isPlaying);
+    } else {
+      m_idleTagged.setRaw(idleText);
+      m_idleTagged.apply(actualText, isPlaying);
+    }
   }
 }
 

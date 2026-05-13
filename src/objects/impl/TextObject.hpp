@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Object.hpp"
+#include "../../tag/TaggedText.hpp"
 #include <Geode/Geode.hpp>
 #include <imgui-cocos.hpp>
 #include <string>
@@ -36,4 +37,8 @@ public:
 
   matjson::Value serialize() override;
   void deserialize(matjson::Value const &data) override;
+
+private:
+  TaggedText m_playingTagged;
+  TaggedText m_idleTagged;
 };

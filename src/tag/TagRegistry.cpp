@@ -20,40 +20,40 @@ void TagRegistry::registerTag(const std::string &name, TagHandler handler,
   m_tags[name] = {handler, availableInIdle};
 }
 
-std::string TagRegistry::process(std::string_view input, bool isPlaying) {
-  std::string inputStr(input);
-  if (!m_cache.contains(inputStr)) {
-    std::vector<FormatSegment> segments;
-    size_t last_pos = 0;
+std::vector<FormatSegment> TagRegistry::parse(std::string_view input) {
+  std::vector<FormatSegment> segments;
+  size_t last_pos = 0;
 
-    for (auto match :
-         ctre::search_all<"\\{([^{}:]+)(?::([^{}]+))?\\}">(input)) {
-      auto full_match = match.template get<0>();
-      size_t match_start = full_match.data() - input.data();
+  for (auto match :
+       ctre::search_all<"\\{([^{}:]+)(?::([^{}]+))?\\}">(input)) {
+    auto full_match = match.template get<0>();
+    size_t match_start = full_match.data() - input.data();
 
-      if (match_start > last_pos) {
-        segments.push_back(
-            {false, std::string(input.substr(last_pos, match_start - last_pos)),
-             ""});
-      }
-
-      segments.push_back({true, std::string(match.template get<1>().to_view()),
-                          match.template get<2>()
-                              ? std::string(match.template get<2>().to_view())
-                              : ""});
-
-      last_pos = match_start + full_match.size();
+    if (match_start > last_pos) {
+      segments.push_back(
+          {false, std::string(input.substr(last_pos, match_start - last_pos)),
+           ""});
     }
 
-    if (last_pos < input.size()) {
-      segments.push_back({false, std::string(input.substr(last_pos)), ""});
-    }
-    m_cache[inputStr] = std::move(segments);
+    segments.push_back({true, std::string(match.template get<1>().to_view()),
+                        match.template get<2>()
+                            ? std::string(match.template get<2>().to_view())
+                            : ""});
+
+    last_pos = match_start + full_match.size();
   }
 
-  const auto &segments = m_cache[inputStr];
+  if (last_pos < input.size()) {
+    segments.push_back({false, std::string(input.substr(last_pos)), ""});
+  }
+  return segments;
+}
+
+std::string
+TagRegistry::renderSegments(const std::vector<FormatSegment> &segments,
+                            bool isPlaying) {
   std::string result;
-  result.reserve(input.size());
+  // result.reserve(input.size()); // We don't have input size easily here, could pass it if needed
 
   for (const auto &seg : segments) {
     if (seg.isTag) {
@@ -84,4 +84,6 @@ std::string TagRegistry::process(std::string_view input, bool isPlaying) {
   return result;
 }
 
-void TagRegistry::clearCache() { m_cache.clear(); }
+std::string TagRegistry::process(std::string_view input, bool isPlaying) {
+  return renderSegments(parse(input), isPlaying);
+}
