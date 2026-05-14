@@ -4,41 +4,41 @@
 #include "../../utils.hpp"
 
 void TextObject::init() {
-  actualText = CCLabelBMFont::create("", fontName.c_str());
-  actualText->setPosition(x, y);
-  actualText->setAnchorPoint(ccp(pivotX, pivotY));
-  actualText->setAlignment(alignment);
-  actualText->setRotation(rotation);
-  actualText->setScale(fontSize / 24.0f);
-  actualText->setColor(ccc3(color.r, color.g, color.b));
-  actualText->setOpacity(color.a);
-  CCDirector::sharedDirector()->getNotificationNode()->addChild(actualText);
+  m_actualText = CCLabelBMFont::create("", m_fontName.c_str());
+  m_actualText->setPosition(m_position);
+  m_actualText->setAnchorPoint(m_pivot);
+  m_actualText->setAlignment(m_alignment);
+  m_actualText->setRotation(m_rotation);
+  m_actualText->setScale(m_fontSize / 24.0f);
+  m_actualText->setColor(ccc3(m_color.r, m_color.g, m_color.b));
+  m_actualText->setOpacity(m_color.a);
+  CCDirector::sharedDirector()->getNotificationNode()->addChild(m_actualText);
 }
 
 void TextObject::update() {
-  if (actualText) {
-    actualText->setPosition(x, y);
-    actualText->setAnchorPoint(ccp(pivotX, pivotY));
-    actualText->setAlignment(alignment);
-    actualText->setRotation(rotation);
-    actualText->setScale(fontSize / 24.0f);
-    actualText->setFntFile(fontName.c_str());
-    actualText->setColor(ccc3(color.r, color.g, color.b));
-    actualText->setOpacity(color.a);
+  if (m_actualText) {
+    m_actualText->setPosition(m_position);
+    m_actualText->setAnchorPoint(m_pivot);
+    m_actualText->setAlignment(m_alignment);
+    m_actualText->setRotation(m_rotation);
+    m_actualText->setScale(m_fontSize / 24.0f);
+    m_actualText->setFntFile(m_fontName.c_str());
+    m_actualText->setColor(ccc3(m_color.r, m_color.g, m_color.b));
+    m_actualText->setOpacity(m_color.a);
   }
 }
 void TextObject::everyFrame() {
-  if (actualText) {
+  if (m_actualText) {
     auto playLayer = PlayLayer::get();
     bool isPlaying = playLayer != nullptr;
     bool isSimulating = TagRegistry::get().m_simulationMode;
 
     if (isPlaying || isSimulating) {
-      m_playingTagged.setRaw(playingText);
-      m_playingTagged.apply(actualText, isPlaying);
+      m_playingTagged.setRaw(m_playingText);
+      m_playingTagged.apply(m_actualText, isPlaying);
     } else {
-      m_idleTagged.setRaw(idleText);
-      m_idleTagged.apply(actualText, isPlaying);
+      m_idleTagged.setRaw(m_idleText);
+      m_idleTagged.apply(m_actualText, isPlaying);
     }
   }
 }
@@ -47,14 +47,14 @@ void TextObject::drawSettings() {
   static auto fonts = getEveryGDFont();
 
   auto valueChanged = false;
-  valueChanged |= ImGui::DragFloat2("Position", &x);
-  valueChanged |= ImGui::DragFloat2("Pivot", &pivotX, 0.01f, 0.0f, 1.0f);
-  valueChanged |= ImGui::DragFloat("Rotation", &rotation);
-  if (ImGui::BeginCombo("Font", fontName.c_str())) {
+  valueChanged |= ImGui::DragFloat2("Position", &m_position.x);
+  valueChanged |= ImGui::DragFloat2("Pivot", &m_pivot.x, 0.01f, 0.0f, 1.0f);
+  valueChanged |= ImGui::DragFloat("Rotation", &m_rotation);
+  if (ImGui::BeginCombo("Font", m_fontName.c_str())) {
     for (const auto &fontname : fonts) {
-      bool isSelected = (fontName == fontname);
+      bool isSelected = (m_fontName == fontname);
       if (ImGui::Selectable(fontname.c_str(), isSelected)) {
-        fontName = fontname;
+        m_fontName = fontname;
         valueChanged = true;
       }
       if (isSelected)
@@ -63,63 +63,63 @@ void TextObject::drawSettings() {
     ImGui::EndCombo();
   }
   valueChanged |=
-      ImGui::Combo("Alignment", (int *)&alignment, "Left\0Center\0Right\0");
+      ImGui::Combo("Alignment", (int *)&m_alignment, "Left\0Center\0Right\0");
   valueChanged |=
-      ImGui::DragFloat("Font Size", &fontSize, 0.25f, 1.0f, 1000.0f);
-  valueChanged |= byteColorEdit4("Color", color);
+      ImGui::DragFloat("Font Size", &m_fontSize, 0.25f, 1.0f, 1000.0f);
+  valueChanged |= byteColorEdit4("Color", m_color);
 
   ImGui::Text("Text Templates:");
-  ImGui::InputTextMultiline("Playing Text", &playingText);
-  ImGui::InputTextMultiline("Idle Text", &idleText);
+  ImGui::InputTextMultiline("Playing Text", &m_playingText);
+  ImGui::InputTextMultiline("Idle Text", &m_idleText);
 
   if (valueChanged)
     update();
 }
 
 void TextObject::destroy() {
-  if (actualText) {
-    actualText->removeFromParentAndCleanup(true);
-    actualText = nullptr;
+  if (m_actualText) {
+    m_actualText->removeFromParentAndCleanup(true);
+    m_actualText = nullptr;
   }
 }
 
 matjson::Value TextObject::serialize() {
   return matjson::makeObject({
       {"type", "text"},
-      {"name", name},
-      {"x", x},
-      {"y", y},
-      {"pivotX", pivotX},
-      {"pivotY", pivotY},
-      {"alignment", static_cast<int>(alignment)},
-      {"rotation", rotation},
-      {"playingText", playingText},
-      {"idleText", idleText},
-      {"fontName", fontName},
-      {"fontSize", fontSize},
-      {"color", color},
+      {"name", m_name},
+      {"x", m_position.x},
+      {"y", m_position.y},
+      {"pivotX", m_pivot.x},
+      {"pivotY", m_pivot.y},
+      {"alignment", static_cast<int>(m_alignment)},
+      {"rotation", m_rotation},
+      {"playingText", m_playingText},
+      {"idleText", m_idleText},
+      {"fontName", m_fontName},
+      {"fontSize", m_fontSize},
+      {"color", m_color},
   });
 }
 
 void TextObject::deserialize(matjson::Value const &data) {
-  name = data["name"].asString().unwrapOr(name);
-  x = data["x"].asDouble().unwrapOr(x);
-  y = data["y"].asDouble().unwrapOr(y);
-  pivotX = data["pivotX"].asDouble().unwrapOr(pivotX);
-  pivotY = data["pivotY"].asDouble().unwrapOr(pivotY);
-  alignment = static_cast<CCTextAlignment>(
-      data["alignment"].asInt().unwrapOr(alignment));
-  rotation = data["rotation"].asDouble().unwrapOr(rotation);
+  m_name = data["name"].asString().unwrapOr(m_name);
+  m_position.x = data["x"].asDouble().unwrapOr(m_position.x);
+  m_position.y = data["y"].asDouble().unwrapOr(m_position.y);
+  m_pivot.x = data["pivotX"].asDouble().unwrapOr(m_pivot.x);
+  m_pivot.y = data["pivotY"].asDouble().unwrapOr(m_pivot.y);
+  m_alignment = static_cast<CCTextAlignment>(
+      data["alignment"].asInt().unwrapOr(m_alignment));
+  m_rotation = data["rotation"].asDouble().unwrapOr(m_rotation);
 
   // very old ver compat
   if (data.contains("text")) {
-    playingText = data["text"].asString().unwrapOr(playingText);
-    idleText = playingText;
+    m_playingText = data["text"].asString().unwrapOr(m_playingText);
+    m_idleText = m_playingText;
   }
 
-  playingText = data["playingText"].asString().unwrapOr(playingText);
-  idleText = data["idleText"].asString().unwrapOr(idleText);
-  fontName = data["fontName"].asString().unwrapOr(fontName);
-  fontSize = data["fontSize"].asDouble().unwrapOr(fontSize);
-  color = data["color"].as<ccColor4B>().unwrapOr(color);
+  m_playingText = data["playingText"].asString().unwrapOr(m_playingText);
+  m_idleText = data["idleText"].asString().unwrapOr(m_idleText);
+  m_fontName = data["fontName"].asString().unwrapOr(m_fontName);
+  m_fontSize = data["fontSize"].asDouble().unwrapOr(m_fontSize);
+  m_color = data["color"].as<ccColor4B>().unwrapOr(m_color);
 }

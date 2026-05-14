@@ -2,21 +2,20 @@
 
 #include <Geode/Utils.hpp>
 #include <string>
+using namespace geode::prelude;
 
 class Object {
 public:
   virtual ~Object() = default;
-  std::string name = "Object";
-  std::string uuid;
-  float x = 0.0f;
-  float y = 0.0f;
-  float pivotX = 0.5f;
-  float pivotY = 0.5f;
-  float rotation = 0.0f;
+  std::string m_name = "Object";
+  std::string m_uuid;
+  CCPoint m_position = ccp(0.0f, 0.0f);
+  CCPoint m_pivot = ccp(0.5f, 0.5f);
+  float m_rotation = 0.0f;
 
-  bool settingsOpen = false;
+  bool m_settingsOpen = false;
 
-  Object() { uuid = geode::utils::random::generateUUID(); }
+  Object() { m_uuid = geode::utils::random::generateUUID(); }
   virtual void init() {}
   virtual void draw() {}
   virtual void drawSettings() {}

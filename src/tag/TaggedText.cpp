@@ -1,17 +1,17 @@
 #include "TaggedText.hpp"
 
 void TaggedText::setRaw(std::string_view raw) {
-  if (m_raw != raw) {
-    m_raw = raw;
-    m_dirty = true;
+  if (m_rawText != raw) {
+    m_rawText = raw;
+    m_isDirty = true;
   }
 }
 
 void TaggedText::compile() {
-  if (!m_dirty)
+  if (!m_isDirty)
     return;
-  m_segments = TagRegistry::get().parse(m_raw);
-  m_dirty = false;
+  m_segments = TagRegistry::get().parse(m_rawText);
+  m_isDirty = false;
 }
 
 std::string TaggedText::render(bool isPlaying) {

@@ -9,16 +9,16 @@
 using namespace geode::prelude;
 
 class TaggedText {
-  std::string m_raw;
+  std::string m_rawText;
   std::vector<FormatSegment> m_segments;
-  bool m_dirty = true;
+  bool m_isDirty = true;
 
 public:
   TaggedText() = default;
-  TaggedText(std::string_view raw) : m_raw(raw), m_dirty(true) {}
+  TaggedText(std::string_view raw) : m_rawText(raw), m_isDirty(true) {}
 
   void setRaw(std::string_view raw);
-  const std::string &getRaw() const { return m_raw; }
+  const std::string &getRaw() const { return m_rawText; }
 
   void compile();
   std::string render(bool isPlaying);

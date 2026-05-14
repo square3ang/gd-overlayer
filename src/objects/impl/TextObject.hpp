@@ -1,29 +1,28 @@
 #pragma once
 
-#include "../Object.hpp"
 #include "../../tag/TaggedText.hpp"
+#include "../Object.hpp"
 #include <Geode/Geode.hpp>
 #include <imgui-cocos.hpp>
 #include <string>
+
 
 using namespace geode::prelude;
 
 class TextObject : public Object {
 public:
-  CCTextAlignment alignment = kCCTextAlignmentLeft;
-  std::string playingText = "Attempts: {Attempts}";
-  std::string idleText = "";
-  std::string fontName = "bigFont.fnt";
-  float fontSize = 12.0f;
-  ccColor4B color = {255, 255, 255, 255};
-  CCLabelBMFont *actualText = nullptr;
+  CCTextAlignment m_alignment = kCCTextAlignmentLeft;
+  std::string m_playingText = "Attempts: {Attempts}";
+  std::string m_idleText = "";
+  std::string m_fontName = "bigFont.fnt";
+  float m_fontSize = 12.0f;
+  ccColor4B m_color = {255, 255, 255, 255};
+  CCLabelBMFont *m_actualText = nullptr;
 
   TextObject() {
-    name = "Text Object";
-    x = 200.0f;
-    y = 200.0f;
-    pivotX = 0.0f;
-    pivotY = 1.0f;
+    m_name = "Text Object";
+    m_position = ccp(200.0f, 200.0f);
+    m_pivot = ccp(0.0f, 1.0f);
   }
 
   void init() override;

@@ -68,13 +68,13 @@ void Overlayer::renderGUI() {
 
   for (auto &obj : m_objects) {
     ImGui::BeginGroup();
-    ImGui::InputText(fmt::format("##Name_{}", obj->uuid).c_str(), &obj->name);
+    ImGui::InputText(fmt::format("##Name_{}", obj->m_uuid).c_str(), &obj->m_name);
     ImGui::SameLine();
-    if (ImGui::Button(fmt::format("Edit##{}_EDIT", obj->uuid).c_str())) {
-      obj->settingsOpen = !obj->settingsOpen;
+    if (ImGui::Button(fmt::format("Edit##{}_EDIT", obj->m_uuid).c_str())) {
+      obj->m_settingsOpen = !obj->m_settingsOpen;
     }
     ImGui::SameLine();
-    if (ImGui::Button(fmt::format("Delete##{}_DELETE", obj->uuid).c_str())) {
+    if (ImGui::Button(fmt::format("Delete##{}_DELETE", obj->m_uuid).c_str())) {
       auto it = std::find(m_objects.begin(), m_objects.end(), obj);
       if (it != m_objects.end()) {
         (*it)->destroy();
@@ -88,15 +88,15 @@ void Overlayer::renderGUI() {
   ImGui::End();
 
   for (auto &obj : m_objects) {
-    if (obj->settingsOpen) {
+    if (obj->m_settingsOpen) {
       ImGui::SetNextWindowSize(
           ImVec2(io.DisplaySize.x / 5, io.DisplaySize.y / 2), ImGuiCond_Once);
       ImGui::SetNextWindowPos(
           ImVec2(io.DisplaySize.x / 2, io.DisplaySize.y / 2), ImGuiCond_Once,
           ImVec2(0.5f, 0.5f));
       ImGui::Begin(
-          fmt::format("{} Settings##{}_SETTINGS", obj->name, obj->uuid).c_str(),
-          &obj->settingsOpen, ImGuiWindowFlags_NoSavedSettings);
+          fmt::format("{} Settings##{}_SETTINGS", obj->m_name, obj->m_uuid).c_str(),
+          &obj->m_settingsOpen, ImGuiWindowFlags_NoSavedSettings);
 
       obj->drawSettings();
 
