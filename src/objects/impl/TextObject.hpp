@@ -14,7 +14,6 @@ public:
   std::string m_playingText = "Attempts: {Attempts}";
   std::string m_idleText = "";
   std::string m_fontName = "bigFont.fnt";
-  float m_fontSize = 12.0f;
   ccColor4B m_color = {255, 255, 255, 255};
   CCLabelBMFont *m_actualText = nullptr;
 

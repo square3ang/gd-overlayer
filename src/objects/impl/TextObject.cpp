@@ -9,7 +9,8 @@ void TextObject::init() {
   m_actualText->setAnchorPoint(m_pivot);
   m_actualText->setAlignment(m_alignment);
   m_actualText->setRotation(m_rotation);
-  m_actualText->setScale(m_fontSize / 24.0f);
+  m_actualText->setScaleX(m_scaleX);
+  m_actualText->setScaleY(m_scaleY);
   m_actualText->setColor(ccc3(m_color.r, m_color.g, m_color.b));
   m_actualText->setOpacity(m_color.a);
   CCDirector::sharedDirector()->getNotificationNode()->addChild(m_actualText);
@@ -21,7 +22,8 @@ void TextObject::update() {
     m_actualText->setAnchorPoint(m_pivot);
     m_actualText->setAlignment(m_alignment);
     m_actualText->setRotation(m_rotation);
-    m_actualText->setScale(m_fontSize / 24.0f);
+    m_actualText->setScaleX(m_scaleX);
+    m_actualText->setScaleY(m_scaleY);
     m_actualText->setFntFile(m_fontName.c_str());
     m_actualText->setColor(ccc3(m_color.r, m_color.g, m_color.b));
     m_actualText->setOpacity(m_color.a);
@@ -49,6 +51,40 @@ void TextObject::drawSettings() {
   auto valueChanged = false;
   valueChanged |= ImGui::DragFloat2("Position", &m_position.x);
   valueChanged |= ImGui::DragFloat2("Pivot", &m_pivot.x, 0.01f, 0.0f, 1.0f);
+
+  float oldX = m_scaleX;
+  float oldY = m_scaleY;
+
+  float startX = ImGui::GetCursorPosX();
+  float itemWidth = ImGui::CalcItemWidth();
+  float innerSpacing = ImGui::GetStyle().ItemInnerSpacing.x;
+  float checkboxWidth = ImGui::GetFrameHeight();
+  float inputWidth = (itemWidth - checkboxWidth - innerSpacing * 2) / 2.0f;
+
+  ImGui::PushItemWidth(inputWidth);
+  if (ImGui::DragFloat("##X", &m_scaleX, 0.005f, 0.0f, 100.0f)) {
+    if (m_linkScale && oldX != 0) {
+      m_scaleY = (m_scaleX / oldX) * oldY;
+    }
+    valueChanged = true;
+  }
+  ImGui::PopItemWidth();
+
+  ImGui::SameLine(0, innerSpacing);
+  valueChanged |= ImGui::Checkbox("##Link", &m_linkScale);
+
+  ImGui::SameLine(0, innerSpacing);
+  ImGui::PushItemWidth(inputWidth);
+  if (ImGui::DragFloat("##Y", &m_scaleY, 0.005f, 0.0f, 100.0f)) {
+    if (m_linkScale && oldY != 0) {
+      m_scaleX = (m_scaleY / oldY) * oldX;
+    }
+    valueChanged = true;
+  }
+  ImGui::PopItemWidth();
+
+  ImGui::SameLine(startX + itemWidth + innerSpacing);
+  ImGui::Text("Scale");
   valueChanged |= ImGui::DragFloat("Rotation", &m_rotation);
   if (ImGui::BeginCombo("Font", m_fontName.c_str())) {
     for (const auto &fontname : fonts) {
@@ -64,8 +100,6 @@ void TextObject::drawSettings() {
   }
   valueChanged |=
       ImGui::Combo("Alignment", (int *)&m_alignment, "Left\0Center\0Right\0");
-  valueChanged |=
-      ImGui::DragFloat("Font Size", &m_fontSize, 0.25f, 1.0f, 1000.0f);
   valueChanged |= byteColorEdit4("Color", m_color);
 
   ImGui::Text("Text Templates:");
@@ -84,34 +118,27 @@ void TextObject::destroy() {
 }
 
 matjson::Value TextObject::serialize() {
-  return matjson::makeObject({
-      {"type", "text"},
-      {"name", m_name},
-      {"x", m_position.x},
-      {"y", m_position.y},
-      {"pivotX", m_pivot.x},
-      {"pivotY", m_pivot.y},
-      {"alignment", static_cast<int>(m_alignment)},
-      {"rotation", m_rotation},
-      {"playingText", m_playingText},
-      {"idleText", m_idleText},
-      {"fontName", m_fontName},
-      {"fontSize", m_fontSize},
-      {"color", m_color},
-  });
+  auto data = Object::serialize();
+  data["type"] = "text";
+  data["alignment"] = static_cast<int>(m_alignment);
+  data["playingText"] = m_playingText;
+  data["idleText"] = m_idleText;
+  data["fontName"] = m_fontName;
+  data["color"] = m_color;
+  return data;
 }
 
 void TextObject::deserialize(matjson::Value const &data) {
-  m_name = data["name"].asString().unwrapOr(m_name);
-  m_position.x = data["x"].asDouble().unwrapOr(m_position.x);
-  m_position.y = data["y"].asDouble().unwrapOr(m_position.y);
-  m_pivot.x = data["pivotX"].asDouble().unwrapOr(m_pivot.x);
-  m_pivot.y = data["pivotY"].asDouble().unwrapOr(m_pivot.y);
+  Object::deserialize(data);
+
+  if (data.contains("fontSize") && !data.contains("scaleX")) {
+    float fontSize = data["fontSize"].asDouble().unwrapOr(24.0f);
+    m_scaleX = m_scaleY = fontSize / 24.0f;
+  }
+
   m_alignment = static_cast<CCTextAlignment>(
       data["alignment"].asInt().unwrapOr(m_alignment));
-  m_rotation = data["rotation"].asDouble().unwrapOr(m_rotation);
 
-  // very old ver compat
   if (data.contains("text")) {
     m_playingText = data["text"].asString().unwrapOr(m_playingText);
     m_idleText = m_playingText;
@@ -120,6 +147,5 @@ void TextObject::deserialize(matjson::Value const &data) {
   m_playingText = data["playingText"].asString().unwrapOr(m_playingText);
   m_idleText = data["idleText"].asString().unwrapOr(m_idleText);
   m_fontName = data["fontName"].asString().unwrapOr(m_fontName);
-  m_fontSize = data["fontSize"].asDouble().unwrapOr(m_fontSize);
   m_color = data["color"].as<ccColor4B>().unwrapOr(m_color);
-}
+}

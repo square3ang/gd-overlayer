@@ -12,10 +12,13 @@ public:
   CCPoint m_position = ccp(0.0f, 0.0f);
   CCPoint m_pivot = ccp(0.5f, 0.5f);
   float m_rotation = 0.0f;
+  float m_scaleX = 0.5f;
+  float m_scaleY = 0.5f;
+  bool m_linkScale = true;
 
   bool m_settingsOpen = false;
 
-  Object() { m_uuid = geode::utils::random::generateUUID(); }
+  Object();
   virtual void init() {}
   virtual void draw() {}
   virtual void drawSettings() {}
@@ -23,6 +26,6 @@ public:
   virtual void everyFrame() {}
 
   virtual void destroy() {}
-  virtual matjson::Value serialize() { return matjson::Value::object(); }
-  virtual void deserialize(matjson::Value const &data) {}
+  virtual matjson::Value serialize();
+  virtual void deserialize(matjson::Value const &data);
 };
