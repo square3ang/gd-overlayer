@@ -6,7 +6,6 @@
 #include <imgui-cocos.hpp>
 #include <string>
 
-
 using namespace geode::prelude;
 
 class TextObject : public Object {

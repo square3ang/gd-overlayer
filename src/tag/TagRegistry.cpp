@@ -83,6 +83,6 @@ TagRegistry::renderSegments(const std::vector<FormatSegment> &segments,
 }
 
 std::string TagRegistry::process(std::string_view input, bool isPlaying,
-                                    bool isSimulating) {
+                                 bool isSimulating) {
   return renderSegments(parse(input), isPlaying, isSimulating);
 }

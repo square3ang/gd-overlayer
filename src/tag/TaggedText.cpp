@@ -19,7 +19,8 @@ std::string TaggedText::render(bool isPlaying, bool isSimulating) {
   return TagRegistry::get().renderSegments(m_segments, isPlaying, isSimulating);
 }
 
-void TaggedText::apply(CCLabelBMFont *label, bool isPlaying, bool isSimulating) {
+void TaggedText::apply(CCLabelBMFont *label, bool isPlaying,
+                       bool isSimulating) {
   if (!label)
     return;
   label->setString(render(isPlaying, isSimulating).c_str());

@@ -68,7 +68,8 @@ void Overlayer::renderGUI() {
 
   for (auto &obj : m_objects) {
     ImGui::BeginGroup();
-    ImGui::InputText(fmt::format("##Name_{}", obj->m_uuid).c_str(), &obj->m_name);
+    ImGui::InputText(fmt::format("##Name_{}", obj->m_uuid).c_str(),
+                     &obj->m_name);
     ImGui::SameLine();
     if (ImGui::Button(fmt::format("Edit##{}_EDIT", obj->m_uuid).c_str())) {
       obj->m_settingsOpen = !obj->m_settingsOpen;
@@ -95,7 +96,8 @@ void Overlayer::renderGUI() {
           ImVec2(io.DisplaySize.x / 2, io.DisplaySize.y / 2), ImGuiCond_Once,
           ImVec2(0.5f, 0.5f));
       ImGui::Begin(
-          fmt::format("{} Settings##{}_SETTINGS", obj->m_name, obj->m_uuid).c_str(),
+          fmt::format("{} Settings##{}_SETTINGS", obj->m_name, obj->m_uuid)
+              .c_str(),
           &obj->m_settingsOpen, ImGuiWindowFlags_NoSavedSettings);
 
       obj->drawSettings();
