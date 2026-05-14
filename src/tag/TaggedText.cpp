@@ -14,13 +14,13 @@ void TaggedText::compile() {
   m_isDirty = false;
 }
 
-std::string TaggedText::render(bool isPlaying) {
+std::string TaggedText::render(bool isPlaying, bool isSimulating) {
   compile();
-  return TagRegistry::get().renderSegments(m_segments, isPlaying);
+  return TagRegistry::get().renderSegments(m_segments, isPlaying, isSimulating);
 }
 
-void TaggedText::apply(CCLabelBMFont *label, bool isPlaying) {
+void TaggedText::apply(CCLabelBMFont *label, bool isPlaying, bool isSimulating) {
   if (!label)
     return;
-  label->setString(render(isPlaying).c_str());
+  label->setString(render(isPlaying, isSimulating).c_str());
 }

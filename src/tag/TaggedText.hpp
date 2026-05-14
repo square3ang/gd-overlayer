@@ -21,6 +21,6 @@ public:
   const std::string &getRaw() const { return m_rawText; }
 
   void compile();
-  std::string render(bool isPlaying);
-  void apply(CCLabelBMFont *label, bool isPlaying);
+  std::string render(bool isPlaying, bool isSimulating);
+  void apply(CCLabelBMFont *label, bool isPlaying, bool isSimulating);
 };

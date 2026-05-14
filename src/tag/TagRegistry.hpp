@@ -25,13 +25,13 @@ public:
   void registerTag(const std::string &name, TagHandler handler,
                    bool availableInIdle = true);
 
-  std::string process(std::string_view input, bool isPlaying);
+  std::string process(std::string_view input, bool isPlaying, bool isSimulating);
 
   std::vector<FormatSegment> parse(std::string_view input);
   std::string renderSegments(const std::vector<FormatSegment> &segments,
-                             bool isPlaying);
+                             bool isPlaying, bool isSimulating);
 
-  bool m_simulationMode = false;
+
 
 private:
   struct TagData {

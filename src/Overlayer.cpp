@@ -59,7 +59,7 @@ void Overlayer::renderGUI() {
   ImGui::Begin("Overlayer", &m_settingsOpen, ImGuiWindowFlags_NoSavedSettings);
 
   auto &reg = TagRegistry::get();
-  ImGui::Checkbox("Simulate In-game", &reg.m_simulationMode);
+  ImGui::Checkbox("Simulate In-game", &m_simulationMode);
 
   if (ImGui::Button("Add Text")) {
     m_objects.push_back(std::make_unique<TextObject>());

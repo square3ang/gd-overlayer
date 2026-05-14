@@ -50,15 +50,15 @@ std::vector<FormatSegment> TagRegistry::parse(std::string_view input) {
 
 std::string
 TagRegistry::renderSegments(const std::vector<FormatSegment> &segments,
-                            bool isPlaying) {
+                            bool isPlaying, bool isSimulating) {
   std::string result;
 
   for (const auto &seg : segments) {
     if (seg.isTag) {
       if (m_tags.contains(seg.text)) {
         const auto &tagData = m_tags[seg.text];
-        if (isPlaying || tagData.availableInIdle || m_simulationMode) {
-          bool isSimulation = m_simulationMode && !isPlaying;
+        if (isPlaying || tagData.availableInIdle || isSimulating) {
+          bool isSimulation = isSimulating && !isPlaying;
           TagValue value = tagData.handler(seg.tagArg, isSimulation);
 
           std::visit(
@@ -82,6 +82,7 @@ TagRegistry::renderSegments(const std::vector<FormatSegment> &segments,
   return result;
 }
 
-std::string TagRegistry::process(std::string_view input, bool isPlaying) {
-  return renderSegments(parse(input), isPlaying);
+std::string TagRegistry::process(std::string_view input, bool isPlaying,
+                                    bool isSimulating) {
+  return renderSegments(parse(input), isPlaying, isSimulating);
 }

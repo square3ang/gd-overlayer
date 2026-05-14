@@ -2,6 +2,7 @@
 #include "../../imgui/imgui_stdlib.h"
 #include "../../tag/TagRegistry.hpp"
 #include "../../utils.hpp"
+#include "../../Overlayer.hpp"
 
 void TextObject::init() {
   m_actualText = CCLabelBMFont::create("", m_fontName.c_str());
@@ -31,14 +32,14 @@ void TextObject::everyFrame() {
   if (m_actualText) {
     auto playLayer = PlayLayer::get();
     bool isPlaying = playLayer != nullptr;
-    bool isSimulating = TagRegistry::get().m_simulationMode;
+    bool isSimulating = Overlayer::get()->m_simulationMode;
 
     if (isPlaying || isSimulating) {
       m_playingTagged.setRaw(m_playingText);
-      m_playingTagged.apply(m_actualText, isPlaying);
+      m_playingTagged.apply(m_actualText, isPlaying, isSimulating);
     } else {
       m_idleTagged.setRaw(m_idleText);
-      m_idleTagged.apply(m_actualText, isPlaying);
+      m_idleTagged.apply(m_actualText, isPlaying, isSimulating);
     }
   }
 }
